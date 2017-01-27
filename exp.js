@@ -12,17 +12,29 @@ function runExperiment(){
 				
 				
 				function findSounds(sons, diff){
-					var bonsons=[];
+					var bonsons={};
+					bonsons.A = []
+					bonsons.NA = []
+					
+					
+					
 					//remplir bonsons!
 					sons.forEach(function (nom, idx){
 						if( nom.includes("_"+diff+"_") ){
-							bonsons.push(nom);
+
+							if( nom.includes("/A_") ){
+								bonsons.A.push(nom);
+							}
+							else if( nom.includes("/NA_") ){
+								bonsons.NA.push(nom);
+							}
 						}
 					});
 					return bonsons
 				}
 				
 				var candidats = findSounds(settings.other.resources, settings.extra_parameters.difficulty);
+				
 				
 				for (var i=0; i < block.length; i++)
 		    	{
