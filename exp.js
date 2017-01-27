@@ -81,8 +81,8 @@ function runExperiment(){
 				var whatever;
 				
 				ma_timeline.forEach(function( trial){
-					var first = {type: 'categorize'};
-					var second = {type: 'categorize'};
+					var first = {};
+					var second = {};
 					first.stimulus = trial.stimuli[0];
 					first.data = {category: first.stimulus.includes("\NA_") ? 'NA' : "A"};
 					first.key_answer = [first.data === "NA" ? 76 : 75] 
