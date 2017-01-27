@@ -32,25 +32,14 @@ function runExperiment(){
 	
 	serverPsych.request(function (settings){
 			    
+		var ma_timeline;
+		
 		settings.timeline.forEach(function(block, idx, timeline){
-			
-			var ma_timeline;
-			
-			
-			
-			
-			
 			
 			if(block.name == "SJ1"){
 				block.timeline = []
-				
-				
-				
+
 				var candidats = findSounds(settings.resources.audio, settings.extra_parameters.difficulty);
-				
-				
-				
-				
 				
 				for (var i=0; i < block.length; i++){
 					
