@@ -94,6 +94,10 @@ function runExperiment(){
 					block.timeline.push(second);
 				});
 				
+				//inserer des trials pas rapport dans la timeline de la tache categorisation??
+				
+				//http://docs.jspsych.org/plugins/jspsych-text/
+				//http://www.w3schools.com/jsref/jsref_splice.asp
 			}
 			
 		});
