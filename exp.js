@@ -85,12 +85,12 @@ function runExperiment(){
 					var second = {};
 					first.stimulus = trial.stimuli[0];
 					first.data = {category: first.stimulus.includes("\NA_") ? 'NA' : "A"};
-					first.key_answer = [first.data === "NA" ? 76 : 75] 
+					first.key_answer = first.data.category === "NA" ? 76 : 75
 					block.timeline.push(first);
 					
 					second.stimulus = trial.stimuli[1];
 					second.data = {category: first.stimulus.includes("\NA_") ? 'NA' : "A"};
-					second.key_answer = [second.data === "NA" ? 76 : 75] 
+					second.key_answer = second.data.category === "NA" ? 76 : 75
 					block.timeline.push(second);
 				});
 				
