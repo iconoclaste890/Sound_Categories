@@ -1,5 +1,35 @@
 function runExperiment(){
 	
+	function findSounds(sons, diff){
+		var bonsons={};
+		bonsons.A = []
+		bonsons.NA = []
+		//remplir bonsons!
+		sons.forEach(function (nom, idx){
+			if( nom.includes("_"+diff+"_") ){
+
+				if( nom.includes("/A_") ){
+					bonsons.A.push(nom);
+				}
+				else if( nom.includes("/NA_") ){
+					bonsons.NA.push(nom);
+				}
+			}
+		});
+		
+		bonsons.A = jsPsych.randomization.shuffle(bonsons.A);
+		bonsons.NA = jsPsych.randomization.shuffle(bonsons.NA);
+		
+		return bonsons
+	}
+	
+	function cycle(array){
+		var element = array.pop();
+		array.unshift(element);
+		return element;
+	}
+	
+	
 	serverPsych.request(function (settings){
 			    
 		settings.timeline.forEach(function(block, idx, timeline){
@@ -7,40 +37,19 @@ function runExperiment(){
 			var ma_timeline;
 			
 			
+			
+			
+			
+			
 			if(block.name == "SJ1"){
 				block.timeline = []
 				
-				function findSounds(sons, diff){
-					var bonsons={};
-					bonsons.A = []
-					bonsons.NA = []
-					//remplir bonsons!
-					sons.forEach(function (nom, idx){
-						if( nom.includes("_"+diff+"_") ){
-
-							if( nom.includes("/A_") ){
-								bonsons.A.push(nom);
-							}
-							else if( nom.includes("/NA_") ){
-								bonsons.NA.push(nom);
-							}
-						}
-					});
-					
-					bonsons.A = jsPsych.randomization.shuffle(bonsons.A);
-					bonsons.NA = jsPsych.randomization.shuffle(bonsons.NA);
-					
-					return bonsons
-				}
+				
 				
 				var candidats = findSounds(settings.resources.audio, settings.extra_parameters.difficulty);
 				
 				
-				function cycle(array){
-					var element = array.pop();
-					array.unshift(element);
-					return element;
-				}
+				
 				
 				
 				for (var i=0; i < block.length; i++){
@@ -53,19 +62,19 @@ function runExperiment(){
 					
 					if(type === 0){
 						//type NA NA
-						trial.stimuli[ cycle(candidats.NA)  ,  cycle(candidats.NA)  ];
+						trial.stimuli = [ cycle(candidats.NA)  ,  cycle(candidats.NA)  ];
 					}
 					else if(type === 1){
 						//type NA A
-						trial.stimuli[ cycle(candidats.NA)  ,  cycle(candidats.A)  ];
+						trial.stimuli = [ cycle(candidats.NA)  ,  cycle(candidats.A)  ];
 					}
 					else if(type ===2){
 						//type A A
-						trial.stimuli[ cycle(candidats.A)  ,  cycle(candidats.A)  ];
+						trial.stimuli = [ cycle(candidats.A)  ,  cycle(candidats.A)  ];
 					}
 					else if(type === 3){
 						//type A NA
-						trial.stimuli[ cycle(candidats.A)  ,  cycle(candidats.NA)  ];
+						trial.stimuli = [ cycle(candidats.A)  ,  cycle(candidats.NA)  ];
 					}
 					
 					block.timeline.push(trial)
@@ -76,6 +85,26 @@ function runExperiment(){
 			}
 			else if(block.name == "SJ2"){
 				block.timeline = ma_timeline;
+			}
+			else if(block.type == "audio-categorization"){
+				block.timeline = []
+				
+				var whatever;
+				
+				ma_timeline.forEach(function( trial){
+					var first = {type: 'categorize'};
+					var second = {type: 'categorize'};
+					first.stimulus = trial.stimuli[0];
+					first.data = {category: first.stimulus.includes("\NA_") ? 'NA' : "A"};
+					first.key_answer = [first.data === "NA" ? 76 : 75] 
+					block.timeline.push(first);
+					
+					second.stimulus = trial.stimuli[1];
+					second.data = {category: first.stimulus.includes("\NA_") ? 'NA' : "A"};
+					second.key_answer = [second.data === "NA" ? 76 : 75] 
+					block.timeline.push(second);
+				});
+				
 			}
 			
 		});
