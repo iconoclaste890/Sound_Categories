@@ -3,21 +3,17 @@ function runExperiment(){
 	serverPsych.request(function (settings){
 			    
 		settings.timeline.forEach(function(block, idx, timeline){
+			
+			var ma_timeline;
+			
+			
 			if(block.name == "SJ1"){
 				block.timeline = []
-				{
-					stimuli: ["", ""]
-						
-				}
-				
 				
 				function findSounds(sons, diff){
 					var bonsons={};
 					bonsons.A = []
 					bonsons.NA = []
-					
-					
-					
 					//remplir bonsons!
 					sons.forEach(function (nom, idx){
 						if( nom.includes("_"+diff+"_") ){
@@ -30,23 +26,56 @@ function runExperiment(){
 							}
 						}
 					});
+					
+					bonsons.A = jsPsych.randomization.shuffle(bonsons.A);
+					bonsons.NA = jsPsych.randomization.shuffle(bonsons.NA);
+					
 					return bonsons
 				}
 				
-				var candidats = findSounds(settings.other.resources, settings.extra_parameters.difficulty);
+				var candidats = findSounds(settings.resources.audio, settings.extra_parameters.difficulty);
 				
 				
-				for (var i=0; i < block.length; i++)
-		    	{
-					var trial= {}
-					trial.stimuli=[]
-					//bien remplir trial.stimuli...
+				function cycle(array){
+					var element = array.pop();
+					array.unshift(element);
+					return element;
+				}
+				
+				
+				for (var i=0; i < block.length; i++){
 					
+					var type = i % 4;
+					var trial = {
+						stimuli: []
+					}
+					
+					
+					if(type === 0){
+						//type NA NA
+						trial.stimuli[ cycle(candidats.NA)  ,  cycle(candidats.NA)  ];
+					}
+					else if(type === 1){
+						//type NA A
+						trial.stimuli[ cycle(candidats.NA)  ,  cycle(candidats.A)  ];
+					}
+					else if(type ===2){
+						//type A A
+						trial.stimuli[ cycle(candidats.A)  ,  cycle(candidats.A)  ];
+					}
+					else if(type === 3){
+						//type A NA
+						trial.stimuli[ cycle(candidats.A)  ,  cycle(candidats.NA)  ];
+					}
 					
 					block.timeline.push(trial)
 		    	}
 				
+				ma_timeline = block.timeline;
 				
+			}
+			else if(block.name == "SJ2"){
+				block.timeline = ma_timeline;
 			}
 			
 		});
